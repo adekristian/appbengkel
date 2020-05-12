@@ -1,0 +1,22 @@
+{
+  "name": "appbengkel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adekristian/appbengkel.git"
+  },
+  "keywords": [
+    "pwganjing123"
+  ],
+  "author": "Adekristian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adekristian/appbengkel/issues"
+  },
+  "homepage": "https://github.com/adekristian/appbengkel#readme"
+}
