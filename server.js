@@ -4,7 +4,6 @@ const app = express();
 
 // parse apllication/json
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
 
 //panggilroutes
 var routes = require('./routes');

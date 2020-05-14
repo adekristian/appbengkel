@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 var response = require('./res');
 var connection = require('./koneksi');
 
 exports.index = function(req,res){
-    response.ok("Aplikasi Res Apiku berjalan",res)
-}
+    response.ok("Aplikasi Res Apiku berjalan", res)
+};
