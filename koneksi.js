@@ -3,7 +3,7 @@ var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'host',
   password : '',
-  database : 'restapi'
+  database : 'db_bengkel'
 
 });
 

@@ -7,36 +7,96 @@ exports.index = function(req, res){
     response.ok("Aplikasi Res Apiku berjalan", res)
 };
 
-//menapilkan data mahasiswa
+//menampilkan data sparepart
+exports.tampilsemuasparepart = function(req, res){
+    connection.query('SELECT * FROM t_sparepat', function(error, rows, fileds){
+        if(error){
+            console.log(error);
+        }else{
+            response.ok(rows, res)
+        }
 
-exports.tampilsemuamahasiswa = function(req,res){
-connection.query('SELECT * FROM mahasiswa', function(error, rows, fileds){
-    if (error){
-        connection.log(error);
+            }
+            )};
 
+//menampilkan data sparepart berdasarkan id
+
+exports.tampilberdasarkanid = function(req, res){
+    let id = req.params.id;
+    connection.query ('SELECT * FROM t_sparepat WHERE id_sparepat = ?', [id], 
+    function(error, rows, fileds){
+        if(error){
+            console.log(error);
+        }else{
+                response.ok(rows, res);
+        }
     }
-    else{
-        response.ok(rows, res)
+  );
+  };
+
+
+// menampilkan data montir seluruhnya
+exports.tampilsemuamontir = function(req, res){
+    connection.query('SELECT * FROM t_montir', function(error, rows, fileds){
+        if(error){
+            console.log(error);
+
+        }else{
+            response.ok(rows, res)
+        }
+            }
+            )};
+
+// menampilkan data montir berdasar id
+exports.tampilberdasarkanidmontir = function(req, res){
+    let id = req.params.id;
+    connection.query ('SELECT * FROM t_montir WHERE id_montir = ?', [id], 
+    function(error, rows, fileds){
+        if(error){
+            console.log(error);
+
+        }else{
+                response.ok(rows, res);
+        }
     }
-});
-};
+  );
+  };
 
+  //menambahkan data table servis
+  exports.tambahservis = function(req, res){
+      var id_servis = req.body.id_servis;
+      var tgl_servis = req.body.tgl_servis;
+      var id_user = req.body.id_user;
+      var id_montir = req.body.id_montir;
+      var id_sparepart = req.body.id_sparepart;
+      var jumlah_sparepart =  req.body.jumlah_sparepart;
 
-//menambahkan data mahasiswa
+      connection.query('INSERT INTO t_servis (id_servis, tgl_servis,id_user,id_montir,id_sparepart,jumlah_sparepart) VALUES (?,?,?,?,?,?)' , 
+      [id_servis, tgl_servis,id_user,id_montir,id_sparepart,jumlah_sparepat],
+        function(error, rows,fileds){
 
-exports.tambahMahasiswa = function(req,res){
-    var nim = req.body.nim;
-    var nama = req.body.nama;
-    var jurusan = req.body.jurusan;
+            if (error) {
+                console.log(error);
+            }else{
+                response.ok("berhasil menambahkan data", res)
+            }
 
-    connection.query('INSERT INTO mahasiswa (nim,nama,jurusan) VALUES(?,?,?)',
-    [nim, nama, jurusan],
-    function (error, rows, fileds){
-        if (error){
-        Console.log(error);
-    }
-    else {
-        response.ok("Berhasil Menambahkan data",res)
-    }
-});
+        }
+      )};
+
+      //menginput data di tabel montir
+exports.tambahmontir = function(req,res){
+    var id_montir = req.body.id_montir;
+    var nama_montir = req.body.nama_montir;
+    var harga_perjam = req.body.harga_perjam;
+
+    connection.query('INSERT INTO t_montir (id_montir,nama_montir,harga_perjam) VALUES(?,?,?)',
+    [id_montir, nama_montir, harga_perjam],
+    function (error, rows, fields){
+        if(error){
+            console.log(error);
+        }else {
+            response.ok("Berhasil Menambahkan Data Montir!",res)
+        }
+    });
 };

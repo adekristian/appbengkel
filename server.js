@@ -10,6 +10,7 @@ app.use(morgan('dev'));
 
 //panggilroutes
 var routes = require('./routes');
+app.use(bodyParser.json());
 routes(app);
 
 //daftar menu routes dari index
