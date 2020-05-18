@@ -78,11 +78,13 @@ exports.tampilberdasarkanidmontir = function(req, res){
             if (error) {
                 console.log(error);
             }else{
-                response.ok("berhasil menambahkan data", res)
+                response.ok("Berhasil menambahkan data", res)
             }
 
         }
       )};
+
+
 
       //menginput data di tabel montir
 exports.tambahmontir = function(req,res){
@@ -99,4 +101,58 @@ exports.tambahmontir = function(req,res){
             response.ok("Berhasil Menambahkan Data Montir!",res)
         }
     });
+
+    //menambahkan data Sparepart
+exports.tambahsparepat = function (req, res) {
+    var nama_sparepat = req.body.nama_sparepat;
+    var harga_sparepat = req.body.harga_sparepat;
+    var satuan = req.body.satuan;
+    
+
+    connection.query('INSERT INTO t_sparepat (nama_sparepat,harga_sparepat,satuan) VALUES(?,?,?)',
+        [nama_sparepat, harga_sparepat,satuan], 
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Menambahkan Data Sparepat", res)
+            }
+        });
+};
+
+//input data user
+exports.tambahuserku = function (req, res) {
+    var username = req.body.username;
+    var email = req.body.email;
+    var password = req.body.password;
+    var role = req.body.role;
+
+    connection.query('INSERT INTO t_user (username,email,password,role) VALUES (?,?,?,?)',
+    [username,email,password,role],
+
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Menambahkan User", res);
+            }
+        });
+}
+
+//input data level
+exports.tambahlevelku = function (req, res) {
+    var nama_level = req.body.nama_level;
+
+    connection.query('INSERT INTO t_level (nama_level) VALUES (?)',
+    [nama_level],
+
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Menambahkan User", res);
+            }
+        });
+}
+
 };
