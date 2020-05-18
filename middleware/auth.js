@@ -96,5 +96,358 @@ exports.login = function(req, res){
 }
 
 exports.halamanrahasia = function(req, res){
-    response.ok("Halaman ini hanya untuk admin!", res);
+    response.ok("Halaman ini hanya untuk role 2!", res);
+
+}
+//mengubah data di tabel User
+exports.ubahuser = function (req, res) {
+    var id = req.body.id;
+    var username = req.body.username;
+    var email = req.body.email;
+    var password = md5(req.body.password);
+    var role = req.body.role;
+    var tanggal_daftar = req.body.tanggal_daftar;
+
+    connection.query('UPDATE t_user SET username=?, email=?, password=?, role=? , tanggal_daftar=? WHERE id=?',
+        [username, email, password, role,tanggal_daftar, id], 
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Mengubah Data user", res)
+            }
+        });
+};
+
+
+//mengubah data di tabel level
+exports.ubahlevel = function (req, res) {
+    var id_level = req.body.id_level;
+    var nama_level = req.body.nama_level;
+    
+    connection.query('UPDATE t_level SET nama_level=? WHERE id_level=?',
+        [id_level,nama_level], 
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Mengubah Data Level", res)
+            }
+        });
+};
+
+
+//mengubah data di tabel service
+exports.ubahservis = function (req, res) {
+    var tgl_servis = new Date();
+    var id_user = req.body.id_user;
+    var id_montir = req.body.id_montir;
+    var jumlah_sparepat = req.body.jumlah_sparepat;
+    var id_sparepat = req.body.id_sparepat;
+    var id_servis = req.body.id_servis;
+    
+    connection.query('UPDATE t_service SET tgl_servis=?, id_user=?, id_montir=?, jumlah_sparepat=?, id_sparepat=? WHERE id_servis=?',
+        [ tgl_servis, id_user, id_montir, jumlah_sparepat, id_sparepat,id_servis], 
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Mengubah Data servis", res)
+            }
+        });
+};
+
+
+//controller untuk user
+exports.tambahuser = function(req,res) {
+    var post = {
+        username: req.body.username,
+        email: req.body.email,
+        password: md5(req.body.password),
+        role: req.body.role,
+        tanggal_daftar: new Date()
+    }
+
+    var query = "SELECT username FROM ?? WHERE ??=?";
+    var table = ["t_user", "username", post.username];
+
+    query = mysql.format(query,table);
+
+    connection.query(query, function(error, rows) {
+        if(error){
+            console.log(error);
+        }else {
+            if(rows.length == 0){
+                var query = "INSERT INTO ?? SET ?";
+                var table = ["t_user"];
+                query = mysql.format(query, table);
+                connection.query(query, post, function(error, rows){
+                    if(error){
+                        console.log(error);
+                    }else {
+                        response.ok("Berhasil menambahkan data user baru", res);
+                    }
+                });
+            }else {
+                response.ok("user sudah terdaftar!",res);
+            }
+        }
+    });
+};
+
+
+//controller untuk input data sparepat
+exports.tambahsparepat = function(req, res) {
+    var post = {
+        nama_sparepat: req.body.nama_sparepat,
+        harga_sparepat: req.body.harga_sparepat,
+        satuan: req.body.satuan
+    }
+
+    var query = "SELECT nama_sparepat FROM ?? WHERE ??=?";
+    var table = ["t_sparepat", "nama_sparepat", post.nama_sparepat];
+
+    query = mysql.format(query,table);
+
+    connection.query(query, function(error,rows){
+        if(error){
+            console.log(error);
+        }else{
+            if(rows.length == 0){
+                var query = "INSERT INTO ?? SET ?";
+                var table = ["t_sparepat"];
+                query = mysql.format(query,table);
+                connection.query(query, post, function(error, rows){
+                    if(error){
+                        console.log(error);
+                    }else{
+                        response.ok("Berhasil menambahkan data Sparepat baru", res);
+                    }
+                });
+            }else{
+                response.ok("Sparepat sudah terdaftar!",res);
+            }
+        }
+    });
+};
+
+//mengubah data di tabel Sparepat
+exports.ubahsparepat = function (req, res) {
+    var id_sparepat = req.body.id_sparepat;
+    var nama_sparepat = req.body.nama_sparepat;
+    var harga_sparepat = req.body.harga_sparepat;
+    var satuan = req.body.satuan;
+    
+    connection.query('UPDATE t_sparepat SET nama_sparepat=?, harga_sparepat=?, satuan=? WHERE id_sparepat=?',
+     [nama_sparepat, harga_sparepat, satuan, id_sparepat],
+    function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Mengubah Data Sparepat", res)
+            }
+        });
+};
+
+
+//Menghapus data sparepat berdasarkan id
+exports.hapussparepat = function(req, res){
+    var id = req.body.id_sparepat;
+    connection.query('DELETE FROM t_sparepat WHERE id_sparepat=?', [id],
+    function (error, rows, fields) {
+        if (error) {
+            console.log(error);
+        } else {
+            response.ok("Berhasil Hapus Data Sparepat", res)
+        }
+    });
+};
+
+
+//menambahkan data servis
+exports.tambahservis = function (req, res) {
+    var post = {
+     tgl_servis: new Date(),
+     id_user: req.body.id_user,
+     id_montir: req.body.id_montir,
+     jumlah_sparepat: req.body.jumlah_sparepat,	
+     id_sparepat: req.body.id_sparepat
+     
+    }
+      var query = "SELECT tgl_servis FROM ?? WHERE ??=?";
+    var table = ["t_servis", "tgl_servis", post.tgl_servis];
+
+    query = mysql.format(query,table);
+
+    connection.query(query, function(error,rows){
+        if(error){
+            console.log(error);
+        }else{
+            if(rows.length == 0){
+                var query = "INSERT INTO ?? SET ?";
+                var table = ["t_servis"];
+                query = mysql.format(query,table);
+                connection.query(query, post, function(error, rows){
+                    if(error){
+                        console.log(error);
+                    }else{
+                        response.ok("Berhasil menambahkan data servis baru", res);
+                    }
+                });
+            }else{
+                response.ok("Servis sudah terdaftar!",res);
+            }
+        }
+    });
+};
+
+//menghapus data tabel servis
+exports.hapusservis = function(req, res){
+    var id = req.body.id_servis;
+    connection.query('DELETE FROM t_servis WHERE id_servis=?', [id],
+    function (error, rows, fields) {
+        if (error) {
+            console.log(error);
+        } else {
+            response.ok("Berhasil hapus data servis", res)
+        }
+    });
+};
+
+
+//menghaous data level berdasarkan id
+exports.hapusLevel = function(req, res){
+    var id = req.body.id_level;
+    connection.query('DELETE FROM t_level WHERE id_level=?', [id],
+    function (error, rows, fields) {
+        if (error) {
+            console.log(error);
+        } else {
+            response.ok("Berhasil hapus data level", res)
+        }
+    });
+};
+
+//menghapus data user berdasarkan id
+exports.hapususer = function(req, res){
+        var id = req.body.id;
+        connection.query('DELETE FROM t_user WHERE id=?', [id],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Hapus Data User", res)
+            }
+        });
+    };
+  
+  //controller untuk menambah data montir
+exports.tambahmontir = function(req, res) {
+    var post = {
+        nama_montir: req.body.nama_montir,
+        harga_perjam: req.body.harga_perjam
+    }
+
+    var query = "SELECT nama_montir FROM ?? WHERE ??=?";
+    var table = ["t_montir", "nama_montir", post.nama_montir];
+
+    query = mysql.format(query,table);
+
+    connection.query(query, function(error,rows){
+        if(error){
+            console.log(error);
+        }else{
+            if(rows.length == 0){
+                var query = "INSERT INTO ?? SET ?";
+                var table = ["t_montir"];
+                query = mysql.format(query,table);
+                connection.query(query, post, function(error, rows){
+                    if(error){
+                        console.log(error);
+                    }else{
+                        response.ok("Berhasil menambahkan data Montir", res);
+                    }
+                });
+            }else{
+                response.ok("Montir sudah terdaftar!",res);
+            }
+        }
+    });
+};
+  
+//mengubah data di tabel montir
+exports.ubahmontir = function (req, res) {
+    var id_montir = req.body.id_montir;
+    var nama_montir = req.body.nama_montir;
+    var harga_perjam = req.body.harga_perjam;
+
+    connection.query('UPDATE t_montir SET nama_montir=?, harga_perjam=? WHERE id_montir=?', 
+    [id_montir, nama_montir, harga_perjam,],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil ubah data montir", res)
+            }
+        });
+};
+
+//Menghapus data montir
+exports.hapusmontir = function(req, res){
+    var id = req.body.id_montir;
+    connection.query('DELETE FROM t_montir WHERE id_montir=?', [id],
+    function (error, rows, fields) {
+        if (error) {
+            console.log(error);
+        } else {
+            response.ok("berhasil hapus data montir", res)
+        }
+    });
+};
+
+//controller untuk input data level
+exports.tambahlevel = function(req, res) {
+    var post = {
+        nama_level: req.body.nama_level
+    }
+
+    var query = "SELECT nama_level FROM ?? WHERE ??=?";
+    var table = ["t_level", "nama_level", post.nama_level];
+
+    query = mysql.format(query,table);
+
+    connection.query(query, function(error,rows){
+        if(error){
+            console.log(error);
+        }else{
+            if(rows.length == 0){
+                var query = "INSERT INTO ?? SET ?";
+                var table = ["t_level"];
+                query = mysql.format(query,table);
+                connection.query(query, post, function(error, rows){
+                    if(error){
+                        console.log(error);
+                    }else{
+                        response.ok("Berhasil menambahkan data level baru", res);
+                    }
+                });
+            }else{
+                response.ok("Level sudah terdaftar!",res);
+            }
+        }
+    });
+};
+
+//menampilkan total biaya
+exports.totalservis = function (req, res) {
+    connection.query('SELECT t_user.username, t_servis.tgl_servis, t_montir.nama_montir, t_sparepat.nama_sparepat, t_sparepat.harga_sparepat, t_servis.jumlah_sparepat, (harga_perjam + jumlah_sparepat * harga_sparepat) AS total_harga FROM t_servis JOIN t_user JOIN t_montir JOIN t_sparepat WHERE t_servis.id_user = t_user.id_user AND t_servis.id_montir = t_montir.id_montir AND t_servis.id_sparepat = t_sparepat.id_sparepat ORDER BY t_user.id_user ',
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.oknested(rows, res);
+            }
+        }
+    )
+
 }

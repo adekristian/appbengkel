@@ -154,5 +154,37 @@ exports.tambahlevelku = function (req, res) {
             }
         });
 }
+//Mengedit Data Monir berdasarkan id
+exports.ubahmontirku = function (req, res) {
+    var id_montir = req.body.id_montir;
+    var nama_montir = req.body.nama_montir;
+    var harga_perjam = req.body.harga_perjam;
 
+    connection.query('UPDATE t_montir SET nama_montir=?, harga_perjam=? WHERE id_montir=?', [nama_montir, harga_perjam, id_montir],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Ubah Data", res)
+            }
+        });
 };
+
+//mengedit data Sparepat
+exports.ubahsparepatku = function (req, res) {
+    var id_sparepat = req.body.id_sparepat;
+    var nama_sparepat = req.body.nama_sparepat;
+    var harga_sparepat = req.body.harga_sparepat;
+    var satuan = req.body.satuan;
+
+    connection.query('UPDATE t_sparepat SET nama_sparepat=?, harga_sparepat=?, satuan=? WHERE id_sparepat=?', 
+    [nama_sparepat, harga_sparepat, satuan, id_sparepat],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok("Berhasil Ubah Data", res)
+            }
+        });
+    }
+}
